@@ -1,0 +1,212 @@
+[
+  {
+    "question": "Jaka jest stolica Francji?",
+    "answers": {
+      "A": "Londyn",
+      "B": "Paryż",
+      "C": "Berlin",
+      "D": "Madryd"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Które miasto jest stolicą Włoch?",
+    "answers": {
+      "A": "Rzym",
+      "B": "Paryż",
+      "C": "Madryt",
+      "D": "Londyn"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Jakie jest największe jezioro na świecie?",
+    "answers": {
+      "A": "Jezioro Wiktorii",
+      "B": "Jezioro Górne",
+      "C": "Morze Kaspijskie",
+      "D": "Jezioro Bajkał"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Jakie zwierzę jest symbolem Australii?",
+    "answers": {
+      "A": "Kangur",
+      "B": "Koala",
+      "C": "Emu",
+      "D": "Dingo"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Kto napisał 'Hamleta'?",
+    "answers": {
+      "A": "Marlowe",
+      "B": "Shakespeare",
+      "C": "Dickens",
+      "D": "Austen"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jaki jest najdłuższy rzeka w Polsce?",
+    "answers": {
+      "A": "Wisła",
+      "B": "Odra",
+      "C": "San",
+      "D": "Warta"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Jaki jest najwyższy szczyt świata?",
+    "answers": {
+      "A": "K2",
+      "B": "Kangczendzonga",
+      "C": "Mount Everest",
+      "D": "Lhotse"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Jak nazywa się najbliższa gwiazda do Ziemi?",
+    "answers": {
+      "A": "Sirius",
+      "B": "Proxima Centauri",
+      "C": "Betelgeza",
+      "D": "Rigel"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jakie miasto jest stolicą Hiszpanii?",
+    "answers": {
+      "A": "Barcelona",
+      "B": "Madryt",
+      "C": "Sevilia",
+      "D": "Valencja"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jakie jest oficjalne język w Brazylii?",
+    "answers": {
+      "A": "Hiszpański",
+      "B": "Francuski",
+      "C": "Portugalski",
+      "D": "Angielski"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Kto wynalazł telefon?",
+    "answers": {
+      "A": "Alexander Graham Bell",
+      "B": "Thomas Edison",
+      "C": "Nikola Tesla",
+      "D": "Guglielmo Marconi"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Jak nazywa się największy ocean na Ziemi?",
+    "answers": {
+      "A": "Ocean Atlantycki",
+      "B": "Ocean Indyjski",
+      "C": "Ocean Spokojny",
+      "D": "Ocean Arktyczny"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Jakie jest główne miasto Kanady?",
+    "answers": {
+      "A": "Toronto",
+      "B": "Ottawa",
+      "C": "Windsor",
+      "D": "Montreal"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Kto był pierwszym prezydentem USA?",
+    "answers": {
+      "A": "Abraham Lincoln",
+      "B": "George Washington",
+      "C": "Thomas Jefferson",
+      "D": "John Adams"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jakie jest najpopularniejsze imię na świecie?",
+    "answers": {
+      "A": "Maria",
+      "B": "John",
+      "C": "Li",
+      "D": "Ahmed"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Która planeta jest najbliżej Słońca?",
+    "answers": {
+      "A": "Ziemia",
+      "B": "Wenus",
+      "C": "Merkury",
+      "D": "Mars"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Jakie jest główne miasto Niemiec?",
+    "answers": {
+      "A": "Monachium",
+      "B": "Berlin",
+      "C": "Frankfurt",
+      "D": "Hamburg"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Kto odkrył penicylinę?",
+    "answers": {
+      "A": "Louis Pasteur",
+      "B": "Alexander Fleming",
+      "C": "Marie Curie",
+      "D": "Gregor Mendel"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jakie jest najstarsze miasto na świecie?",
+    "answers": {
+      "A": "Babilon",
+      "B": "Damask",
+      "C": "Jerozolima",
+      "D": "Kair"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Jakie miasto jest stolicą Szwecji?",
+    "answers": {
+      "A": "Sztokholm",
+      "B": "Göteborg",
+      "C": "Malmo",
+      "D": "Upsala"
+    },
+    "correctAnswer": "A"
+  },
+  {
+    "question": "Jakie zwierzę jest najszybsze na lądzie?",
+    "answers": {
+      "A": "Gazela",
+      "B": "Tygrys",
+      "C": "Cheetah (Lampart)",
+      "D": "Koń"
+    },
+    "correctAnswer": "C"
+  }
+]

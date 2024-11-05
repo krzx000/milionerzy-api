@@ -14,11 +14,11 @@ let gameStarted = false;
 let currentQuestionIndex = -1;
 let selectedAnswer = null;
 let lost = false;
-let lifelinesUsed = {
-  "50:50": false,
-  Audience: false,
-  PhoneAFriend: false,
-};
+let won = false;
+let lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+
+// Pomocnicza funkcja do opóźniania
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Wczytanie pytań
 function loadQuestions() {
@@ -36,53 +36,63 @@ function shuffleArray(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+// Resetowanie stanu gry
+function resetGame() {
+  lost = false;
+  won = false;
+  gameStarted = false;
+  currentQuestionIndex = -1;
+  selectedAnswer = null;
+  lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+}
+
+// Wysyłanie aktualnego statusu gry
 function sendStatus() {
   broadcast({
     type: "STATUS",
     gameStarted,
     lost,
-    currentQuestionIndex,
+    won,
+    currentQuestionIndex: currentQuestionIndex + 1,
     selectedAnswer,
+    currentQuestion: questions[currentQuestionIndex],
     reward: rewards[currentQuestionIndex],
     allQuestionsLength: getAllQuestions().length,
-    gameQuestionsLength: getAllQuestions().length > questionCount ? questionCount : getAllQuestions().length,
+    gameQuestionsLength: Math.min(getAllQuestions().length, questionCount),
     lifelinesUsed,
   });
 }
 
+// Endpoint do uzyskania statusu
 app.get("/status", (req, res) => {
   sendStatus();
-
   res.json({ message: "Wysłano status." });
 });
 
-// Start gry
+// Endpoint do rozpoczęcia gry
 app.post("/start", (req, res) => {
   if (!questions.length) loadQuestions();
   if (questions.length === 0) return res.status(500).json({ message: "Brak pytań." });
-  lost = false;
+
+  resetGame();
   gameStarted = true;
   currentQuestionIndex = 0;
-  selectedAnswer = null;
-  lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false }; // Resetowanie kół
 
   broadcast({ type: "START" });
   sendStatus();
-
   res.json({ message: "Gra rozpoczęta." });
 });
 
-// Pobierz aktualne pytanie
+// Endpoint do uzyskania aktualnego pytania
 app.get("/current-question", (req, res) => {
   if (!gameStarted || currentQuestionIndex < 0)
     return res.status(400).json({ message: "Gra nie jest rozpoczęta." });
 
   sendStatus();
-
   res.json({ message: "Wysłano aktualne pytanie" });
 });
 
-// Użycie koła ratunkowego
+// Endpoint do użycia koła ratunkowego
 app.post("/use-lifeline/:lifeline", (req, res) => {
   const lifeline = req.params.lifeline;
   if (!lifelines.includes(lifeline) || lifelinesUsed[lifeline]) {
@@ -94,7 +104,7 @@ app.post("/use-lifeline/:lifeline", (req, res) => {
   let lifelineResult;
   switch (lifeline) {
     case "50:50":
-      // Wybieramy dwie losowe opcje, w tym poprawną odpowiedź
+      // Wybieramy dwie opcje, w tym poprawną odpowiedź
       const correctIndex = questions[currentQuestionIndex].correctAnswer;
       const incorrectOptions = questions[currentQuestionIndex].options
         .map((_, i) => i)
@@ -104,7 +114,7 @@ app.post("/use-lifeline/:lifeline", (req, res) => {
       break;
     case "Audience":
       // Symulujemy wyniki głosowania
-      lifelineResult = [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100];
+      lifelineResult = Array.from({ length: 4 }, () => Math.random() * 100);
       break;
     case "PhoneAFriend":
       // Losujemy odpowiedź jako podpowiedź
@@ -118,42 +128,36 @@ app.post("/use-lifeline/:lifeline", (req, res) => {
 });
 
 // Wybór odpowiedzi przez prowadzącego
-app.post("/select-answer/:answerIndex", (req, res) => {
+app.post("/select-answer/:answerIndex", async (req, res) => {
   if (!gameStarted || currentQuestionIndex < 0)
     return res.status(400).json({ message: "Gra nie jest rozpoczęta." });
 
+  const correctAnswer = questions[currentQuestionIndex].correctAnswer;
   selectedAnswer = req.params.answerIndex;
-  broadcast({ type: "ANSWER_SELECTED", selectedAnswer: selectedAnswer });
 
-  setTimeout(() => {
-    const correctAnswer = questions[currentQuestionIndex].correctAnswer;
-    broadcast({ type: "CORRECT_ANSWER", correctAnswer });
+  broadcast({ type: "ANSWER_SELECTED", selectedAnswer });
 
-    setTimeout(() => {
-      if (selectedAnswer != correctAnswer) {
-        lost = true;
-        gameStarted = false;
-        currentQuestionIndex = -1;
-        selectedAnswer = null;
-        lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+  await delay(5000);
+  broadcast({ type: "CORRECT_ANSWER" });
 
-        broadcast({ type: "WRONG_ANSWER" });
-      }
+  sendStatus();
+  await delay(5000);
 
-      if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++;
-        selectedAnswer = null;
-      } else {
-        lost = false;
-        gameStarted = false;
-        currentQuestionIndex = -1;
-        selectedAnswer = null;
-        lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
-      }
-      sendStatus();
-    }, 5000);
-  }, 5000);
+  if (selectedAnswer != correctAnswer) {
+    lost = true;
+    console.log("WRONG ANSWER");
+  } else {
+    console.log("CORRECT ANSWER");
+    currentQuestionIndex++;
+    selectedAnswer = null;
+    broadcast({ type: "NEXT_QUESTION" });
+  }
 
+  if (currentQuestionIndex >= questions.length) {
+    won = true;
+  }
+
+  sendStatus();
   res.json({ message: "Odpowiedź zatwierdzona." });
 });
 
@@ -165,23 +169,6 @@ function broadcast(data) {
     }
   });
 }
-
-// Połączenia WebSocket
-wss.on("connection", (ws) => {
-  if (gameStarted && currentQuestionIndex >= 0) {
-    const question = questions[currentQuestionIndex];
-    ws.send(
-      JSON.stringify({
-        type: "NEXT_QUESTION",
-        questionNumber: currentQuestionIndex + 1,
-        question: question.question,
-        options: question.options,
-        reward: rewards[currentQuestionIndex],
-        lifelinesUsed,
-      })
-    );
-  }
-});
 
 // Uruchomienie serwera
 const PORT = 3000;

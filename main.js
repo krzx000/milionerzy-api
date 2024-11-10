@@ -4,6 +4,7 @@ const WebSocket = require("ws");
 const fs = require("fs");
 const path = require("path");
 const { rewards, questionCount, lifelines, noRewardWhenLost } = require("./config");
+const { DURATION } = require("./sound");
 
 const app = express();
 const server = http.createServer(app);
@@ -153,7 +154,14 @@ app.post("/select-answer/:answerIndex", async (req, res) => {
   broadcast({ type: "CORRECT_ANSWER" });
 
   sendStatus();
-  await delay(5000);
+
+  if (selectedAnswer == correctAnswer) {
+    console.log("CORRECT DELAY", Math.max(5000, DURATION.win[currentQuestionIndex] * 1000));
+    await delay(Math.max(5000, DURATION.win[currentQuestionIndex] * 1000));
+  } else {
+    console.log("WRONG DELAY", Math.max(5000, DURATION.lose[currentQuestionIndex] * 1000));
+    await delay(Math.max(5000, DURATION.lose[currentQuestionIndex] * 1000));
+  }
 
   if (selectedAnswer != correctAnswer) {
     lost = true;

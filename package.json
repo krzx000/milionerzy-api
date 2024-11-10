@@ -10,6 +10,7 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.1",
+    "get-audio-duration": "^4.0.1",
     "websocket": "^1.0.35",
     "ws": "^8.18.0"
   }

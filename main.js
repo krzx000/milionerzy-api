@@ -3,7 +3,7 @@ const http = require("http");
 const WebSocket = require("ws");
 const fs = require("fs");
 const path = require("path");
-const { rewards, questionCount, lifelines } = require("./config");
+const { rewards, questionCount, lifelines, noRewardWhenLost } = require("./config");
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +16,7 @@ let selectedAnswer = null;
 let lost = false;
 let won = false;
 let lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+let mileStones = [4, 8, 12];
 
 // Pomocnicza funkcja do opóźniania
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -42,6 +43,8 @@ function resetGame() {
   won = false;
   gameStarted = false;
   currentQuestionIndex = -1;
+
+  reward = 0;
   selectedAnswer = null;
   lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
 }
@@ -55,6 +58,7 @@ function sendStatus() {
     won,
     currentQuestionIndex: currentQuestionIndex + 1,
     selectedAnswer,
+    rewards,
     currentQuestion: questions[currentQuestionIndex],
     reward: rewards[currentQuestionIndex],
     allQuestionsLength: getAllQuestions().length,
@@ -67,6 +71,14 @@ function sendStatus() {
 app.get("/status", (req, res) => {
   sendStatus();
   res.json({ message: "Wysłano status." });
+});
+
+app.post("/end-game", (req, res) => {
+  if (!gameStarted) return res.status(400).json({ message: "Gra nie jest rozpoczęta." });
+  resetGame();
+  questions = [];
+  broadcast({ type: "END_GAME" });
+  res.json({ message: "Gra zakończona." });
 });
 
 // Endpoint do rozpoczęcia gry
@@ -148,16 +160,23 @@ app.post("/select-answer/:answerIndex", async (req, res) => {
     console.log("WRONG ANSWER");
   } else {
     console.log("CORRECT ANSWER");
-    currentQuestionIndex++;
-    selectedAnswer = null;
-    broadcast({ type: "NEXT_QUESTION" });
-  }
-
-  if (currentQuestionIndex >= questions.length) {
-    won = true;
+    if (currentQuestionIndex + 1 >= questions.length) {
+      won = true;
+    } else {
+      currentQuestionIndex++;
+      selectedAnswer = null;
+      broadcast({ type: "NEXT_QUESTION" });
+    }
   }
 
   sendStatus();
+
+  if (mileStones.includes(currentQuestionIndex + 1)) {
+    broadcast({ type: "SHOW_LADDER" });
+    await delay(10000);
+    broadcast({ type: "HIDE_LADDER" });
+  }
+
   res.json({ message: "Odpowiedź zatwierdzona." });
 });
 

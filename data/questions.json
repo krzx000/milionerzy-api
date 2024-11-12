@@ -208,5 +208,85 @@
       "D": "Koń"
     },
     "correctAnswer": "C"
+  },
+  {
+    "question": "Który kontynent jest najmniejszy pod względem powierzchni?",
+    "answers": {
+      "A": "Europa",
+      "B": "Australia",
+      "C": "Antarktyda",
+      "D": "Afryka"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Która planeta w Układzie Słonecznym jest największa?",
+    "answers": {
+      "A": "Ziemia",
+      "B": "Mars",
+      "C": "Jowisz",
+      "D": "Saturn"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "W którym roku Polska wstąpiła do Unii Europejskiej?",
+    "answers": {
+      "A": "2001",
+      "B": "2002",
+      "C": "2003",
+      "D": "2004"
+    },
+    "correctAnswer": "D"
+  },
+  {
+    "question": "Które zwierzę jest symbolem Republiki Południowej Afryki?",
+    "answers": {
+      "A": "Słoń",
+      "B": "Gepard",
+      "C": "Lew",
+      "D": "Nosorożec"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Kto namalował obraz 'Dama z gronostajem'?",
+    "answers": {
+      "A": "Vincent van Gogh",
+      "B": "Pablo Picasso",
+      "C": "Leonardo da Vinci",
+      "D": "Rembrandt"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Które morze leży na północ od Polski?",
+    "answers": {
+      "A": "Śródziemne",
+      "B": "Czarne",
+      "C": "Bałtyckie",
+      "D": "Adriatyckie"
+    },
+    "correctAnswer": "C"
+  },
+  {
+    "question": "Który pierwiastek chemiczny oznaczany jest symbolem 'O'?",
+    "answers": {
+      "A": "Złoto",
+      "B": "Tlen",
+      "C": "Żelazo",
+      "D": "Wodór"
+    },
+    "correctAnswer": "B"
+  },
+  {
+    "question": "Który sportowiec zdobył najwięcej medali olimpijskich?",
+    "answers": {
+      "A": "Usain Bolt",
+      "B": "Michael Phelps",
+      "C": "Carl Lewis",
+      "D": "Mark Spitz"
+    },
+    "correctAnswer": "B"
   }
 ]

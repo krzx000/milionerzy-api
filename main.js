@@ -44,7 +44,6 @@ function resetGame() {
   won = false;
   gameStarted = false;
   currentQuestionIndex = -1;
-
   reward = 0;
   selectedAnswer = null;
   lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
@@ -159,7 +158,6 @@ app.post("/select-answer/:answerIndex", async (req, res) => {
     console.log("CORRECT DELAY", Math.max(5000, DURATION.win[currentQuestionIndex] * 1000));
     await delay(Math.max(5000, DURATION.win[currentQuestionIndex] * 1000));
   } else {
-    console.log("WRONG DELAY", Math.max(5000, DURATION.lose[currentQuestionIndex] * 1000));
     await delay(Math.max(5000, DURATION.lose[currentQuestionIndex] * 1000));
   }
 

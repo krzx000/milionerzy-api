@@ -16,8 +16,9 @@ let currentQuestionIndex = -1;
 let selectedAnswer = null;
 let lost = false;
 let won = false;
-let lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+let lifelinesUsed = { F_F: false, VOTING: false, PHONE: false };
 let mileStones = [4, 8, 12];
+let lifelineResult = ["A", "B", "C", "D"];
 
 // Pomocnicza funkcja do opóźniania
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,12 +42,13 @@ function shuffleArray(array) {
 // Resetowanie stanu gry
 function resetGame() {
   lost = false;
+  lifelineResult = ["A", "B", "C", "D"];
   won = false;
   gameStarted = false;
   currentQuestionIndex = -1;
   reward = 0;
   selectedAnswer = null;
-  lifelinesUsed = { "50:50": false, Audience: false, PhoneAFriend: false };
+  lifelinesUsed = { F_F: false, VOTING: false, PHONE: false };
 }
 
 // Wysyłanie aktualnego statusu gry
@@ -55,6 +57,7 @@ function sendStatus() {
     type: "STATUS",
     gameStarted,
     lost,
+    lifelineResult,
     won,
     currentQuestionIndex: currentQuestionIndex + 1,
     selectedAnswer,
@@ -107,35 +110,38 @@ app.get("/current-question", (req, res) => {
 // Endpoint do użycia koła ratunkowego
 app.post("/use-lifeline/:lifeline", (req, res) => {
   const lifeline = req.params.lifeline;
+
   if (!lifelines.includes(lifeline) || lifelinesUsed[lifeline]) {
     return res.status(400).json({ message: "Koło ratunkowe już zostało użyte lub jest nieprawidłowe." });
   }
 
   lifelinesUsed[lifeline] = true;
 
-  let lifelineResult;
   switch (lifeline) {
-    case "50:50":
+    case "F_F":
       // Wybieramy dwie opcje, w tym poprawną odpowiedź
-      const correctIndex = questions[currentQuestionIndex].correctAnswer;
-      const incorrectOptions = questions[currentQuestionIndex].options
-        .map((_, i) => i)
-        .filter((i) => i !== correctIndex);
-      const randomIncorrect = incorrectOptions[Math.floor(Math.random() * incorrectOptions.length)];
-      lifelineResult = [correctIndex, randomIncorrect];
+      const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+      const incorrectAnswers = Object.keys(questions[currentQuestionIndex].answers).filter(
+        (answer) => answer !== correctAnswer
+      );
+      const randomIncorrect = incorrectAnswers[Math.floor(Math.random() * incorrectAnswers.length)];
+
+      lifelineResult = [correctAnswer, randomIncorrect];
+
       break;
-    case "Audience":
+    case "VOTING":
       // Symulujemy wyniki głosowania
-      lifelineResult = Array.from({ length: 4 }, () => Math.random() * 100);
+      // lifelineResult = Array.from({ length: 4 }, () => Math.random() * 100);
       break;
-    case "PhoneAFriend":
+    case "PHONE":
       // Losujemy odpowiedź jako podpowiedź
-      lifelineResult = questions[currentQuestionIndex].correctAnswer;
+      // lifelineResult = questions[currentQuestionIndex].correctAnswer;
       break;
   }
 
   // Wysłanie aktualizacji do gracza i prowadzącego
-  broadcast({ type: "LIFELINE_USED", lifeline, result: lifelineResult });
+  broadcast({ type: "LIFELINE_USED", lifeline });
+  sendStatus();
   res.json({ message: `${lifeline} użyte.`, result: lifelineResult });
 });
 
@@ -172,6 +178,7 @@ app.post("/select-answer/:answerIndex", async (req, res) => {
       currentQuestionIndex++;
       selectedAnswer = null;
       broadcast({ type: "NEXT_QUESTION" });
+      lifelineResult = ["A", "B", "C", "D"];
     }
   }
 

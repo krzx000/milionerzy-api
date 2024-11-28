@@ -2,6 +2,9 @@
 
 ## Instalacja
 
+NODEJS v20.17.0
+NPM v10.8.3
+
 ```bash
   npm i
 ```
